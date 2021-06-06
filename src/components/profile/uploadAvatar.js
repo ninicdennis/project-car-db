@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../utils/initSupabase';
-
+import ProfileAvatar from '@material-ui/core/Avatar';
 export default function Avatar({ url, size, onUpload }) {
 	const [avatarUrl, setAvatarUrl] = useState(null);
 	const [uploading, setUploading] = useState(false);
@@ -52,7 +52,7 @@ export default function Avatar({ url, size, onUpload }) {
 	return (
 		<div>
 			{avatarUrl ? (
-				<img src={avatarUrl} alt='Avatar' className='avatar image' style={{ height: size, width: size }} />
+				<ProfileAvatar variant='rounded' src={avatarUrl} alt='Avatar' className='avatar image' style={{ height: size, width: size }} />
 			) : (
 				<div className='avatar no-image' style={{ height: size, width: size }} />
 			)}
