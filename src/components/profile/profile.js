@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../../utils/initSupabase';
 import { useAuth } from '../../utils/sweet-state/authStore';
 import Avatar from './uploadAvatar';
+import Banner from './uploadBanner';
 
 export const Profile = props => {
 	const [state, actions] = useAuth();
@@ -11,20 +12,12 @@ export const Profile = props => {
 	const [model, setModel] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [avatar_url, setAvatarUrl] = useState(null);
-	useEffect(() => {
-		const userTest = async () => {
-			const loggedUser = supabase.auth.user();
-			if (loggedUser === null) {
-				props.history.push('/login');
-			}
-		};
-		userTest();
-	}, [props.user]);
+	const [profile_banner, setProfileBanner] = useState(null);
 
 	useEffect(() => {
 		const grabUserDetails = async () => {
 			const user = supabase.auth.user();
-			const { data, error, status } = await supabase.from('profiles').select('username, avatar_url').eq('id', user.id);
+			const { data, error, status } = await supabase.from('profiles').select('username, avatar_url, profile_banner').eq('id', user.id);
 			const carDetails = await supabase.from('car-details').select('year, make, model').eq('id', user.id);
 			if (error || carDetails.error) {
 				console.log('Something happened.');
@@ -33,7 +26,7 @@ export const Profile = props => {
 				setProfile(data[0]);
 				setAvatarUrl(data[0].avatar_url);
 				const { year, make, model } = carDetails.data[0];
-				console.log(year, make, model);
+				setProfileBanner(data[0].profile_banner);
 				setYear(year);
 				setMake(make);
 				setModel(model);
@@ -46,6 +39,18 @@ export const Profile = props => {
 		try {
 			const user = supabase.auth.user();
 			const { data, error } = await supabase.from('profiles').update({ avatar_url: avatar }).eq('id', user.id);
+			if (error) {
+				throw error;
+			}
+		} catch (e) {
+			console.log('Error: ', e);
+		}
+	};
+
+	const updateProfileBanner = async banner => {
+		try {
+			const user = supabase.auth.user();
+			const { data, error } = await supabase.from('profiles').update({ profile_banner: banner }).eq('id', user.id);
 			if (error) {
 				throw error;
 			}
@@ -75,12 +80,24 @@ export const Profile = props => {
 			<div>Welcome: {profile.username}</div>
 			<Avatar
 				url={avatar_url}
-				size={150}
+				size={250}
 				onUpload={url => {
 					setAvatarUrl(url);
 					updateProfileAvatar(url);
 				}}
 			/>
+			<div style={{ width: '100%', height: 600, paddingBottom: 20 }}>
+				<Banner
+					style={{ width: '100vw', height: 600, backgroundColor: '#b4b4b4' }}
+					url={profile_banner}
+					size={150}
+					onUpload={url => {
+						setProfileBanner(url);
+						updateProfileBanner(url);
+					}}
+				/>
+			</div>
+
 			<div>
 				<p>Enter Your Vehicle Description:</p>
 				<p>Year</p>

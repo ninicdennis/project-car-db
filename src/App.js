@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from './utils/initSupabase';
-import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 
 import { Header } from './components/header/header';
 import { Dashboard } from './components/dashboard/dashboard';
@@ -31,7 +31,11 @@ const App = () => {
 				<Route exact path='/home' component={Home} />
 				<Route exact path='/signup' render={props => <Signup {...props} isUser={session ? true : false} />} />
 				<Route exact path='/login' render={props => <Login {...props} isUser={session ? true : false} />} />
-				<Route exact path='/profile' render={props => <Profile {...props} user={session ? session.user : false} />} />
+				{session ? (
+					<Route exact path='/profile' render={props => <Profile {...props} user={session ? session.user : false} />} />
+				) : (
+					<Redirect to='/login' />
+				)}
 				<Route exact path='/user/:username' render={props => <UserProfile {...props} />} />
 				<Route path='*' render={() => <div>Not Found</div>} />
 			</Switch>
