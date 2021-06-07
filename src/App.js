@@ -31,12 +31,12 @@ const App = () => {
 				<Route exact path='/home' component={Home} />
 				<Route exact path='/signup' render={props => <Signup {...props} isUser={session ? true : false} />} />
 				<Route exact path='/login' render={props => <Login {...props} isUser={session ? true : false} />} />
+				<Route exact path='/user/:username' render={props => <UserProfile {...props} />} />
 				{session ? (
 					<Route exact path='/profile' render={props => <Profile {...props} user={session ? session.user : false} />} />
 				) : (
-					<Redirect to='/login' />
+					<Redirect push to='/login' />
 				)}
-				<Route exact path='/user/:username' render={props => <UserProfile {...props} />} />
 				<Route path='*' render={() => <div>Not Found</div>} />
 			</Switch>
 		</BrowserRouter>
