@@ -17,6 +17,7 @@ export const Profile = props => {
 	useEffect(() => {
 		const grabUserDetails = async () => {
 			const user = supabase.auth.user();
+			console.log(user);
 			const { data, error, status } = await supabase.from('profiles').select('username, avatar_url, profile_banner').eq('id', user.id);
 			const carDetails = await supabase.from('car-details').select('year, make, model').eq('id', user.id);
 			if (error || carDetails.error) {

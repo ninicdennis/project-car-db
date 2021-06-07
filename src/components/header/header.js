@@ -41,7 +41,9 @@ export const Header = ({ paths, user }) => {
 					</Typography>
 					{user ? (
 						<Button color='inherit'>
-							<Link to='/profile'>Profile</Link>
+							<Link to='/profile' style={{ textDecoration: 'none', marginLeft: 10 }}>
+								<Typography style={{ color: '#fff', fontSize: '0.875rem' }}>Profile</Typography>
+							</Link>
 						</Button>
 					) : null}
 					{user ? (
@@ -49,7 +51,14 @@ export const Header = ({ paths, user }) => {
 							Sign Out
 						</Button>
 					) : (
-						<Link to='/login'>Sign In</Link>
+						<div style={{ display: 'flex', flexDirection: 'row' }}>
+							<Link to='/login' style={{ textDecoration: 'none', marginLeft: 10 }}>
+								<Typography style={{ color: '#fff', fontSize: '0.875rem' }}>Sign In</Typography>
+							</Link>
+							<Link to='/signup' style={{ textDecoration: 'none', marginLeft: 10 }}>
+								<Typography style={{ color: '#fff', fontSize: '0.875rem' }}>Sign Up</Typography>
+							</Link>
+						</div>
 					)}
 					<Button color='inherit' aria-controls='simple-menu' aria-haspopup onClick={handleClick}>
 						Menu
